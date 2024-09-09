@@ -15,6 +15,36 @@
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<style>
+			body {
+            font-family: 'Arial', sans-serif; /* Choose a clean, modern font */
+            font-size: 16px; /* Default font size */
+            line-height: 1.6; /* Improve line spacing for readability */
+            color: #333; /* Use a dark gray color instead of pure black */
+            margin: 20px; /* Add some space around the page */
+        	}
+
+			h1, h2, h3, h4, h5, h6 {
+				font-family: 'Georgia', serif; /* Use a serif font for headings */
+				color: #222; /* Slightly darker color for headings */
+			}
+
+			p {
+				margin-bottom: 15px; /* Add spacing between paragraphs */
+			}
+
+			a {
+				color: #007BFF; /* Use a consistent color for links */
+				text-decoration: none; /* Remove underline from links */
+			}
+
+			a:hover {
+				text-decoration: underline; /* Add underline on hover for links */
+			}
+
+			.caption {
+				font-size: 14px; /* Slightly smaller font for captions */
+				color: #555; /* A lighter gray color for captions */
+			}
 			.image-container {
 				display: flex;
 				justify-content: center;
@@ -50,17 +80,13 @@
 								<li><a href="#intro" class="arrow scrolly"><span class="label">Introduction</span></a></li>
 								<li><a href="#singlescale" class="arrow scrolly"><span class="label">Single Scale</span></a></li>
 								<li><a href="#multiscale" class="arrow scrolly"><span class="label">Multi Scale</span></a></li>
-								<li><a href="#phasecorr" class="arrow scrolly"><span class="label">Phase Correlation</span></a></li>
-								<li><a href="#bells" class="arrow scrolly"><span class="label">Bells and Whistles</span></a></li>
+								<li><a href="#phasecorr" class="arrow scrolly"><span class="label">Bells and Whistles: Phase Correlation</span></a></li>
+								<li><a href="#bells" class="arrow scrolly"><span class="label">Bells and Whistles: Custom Images</span></a></li>
 							</ul>
 
 							<p>
 								<a href="https://en.wikipedia.org/wiki/Prokudin-Gorskii" target="_blank">Sergei Mikhailovich Prokudin-Gorskii</a> (1863-1944) won the Tzar's special permission to travel across the vast Russian Empire and take color photographs of everything he saw including the only color portrait of Leo Tolstoy. And he really photographed everything: people, buildings, landscapes, railroads, bridges... thousands of color pictures! His idea was simple: record three exposures of every scene onto a glass plate using a red, a green, and a blue filter. The aim of this project is to implement an algorithm that, given a 3-channel image, produces a color image as output. Here, I implement a simple single-scale version first, using for loops, searching over a user-specified window of displacements. 
 							</p>
-						</header>
-						<div class="content">
-							<span class="image fill" data-position="center"><img src="images/pic01.jpg" alt="" /></span>
-						</div>
 					</section>
 
 				<!-- Section -->
@@ -278,7 +304,10 @@ def align_multiscale(im1, im2, depth):<br>
 						<div class="content"">
 							<p>
 							Exhaustive searching takes time and is overly reliant on pixel values. In practice, experimenting and tuning the margins, the range to search over, which channel to align to all takes time.
-							We don't want to take time. Enter phase correlation. I came across it in the textbook, and Wikipedia provided a formula. The premise is, let's move from the time domain to frequency domain using a 2D fourier transform, compute the cross-correlation there very efficiently, and then move back into the time domain and find the offset which maximizes the cross-correlation. It's beautiful, and much faster than anything above, especially given that it's performing a global search (not just over the interval specified).
+							We don't want to take time. Enter phase correlation. I came across it in the textbook, and Wikipedia provided a formula. The premise is, let's move from the time domain to frequency domain using a 2D fourier transform, compute the cross-correlation there very efficiently, and then move back into the time domain using a 2D inverse FFT and find the offset which maximizes the cross-correlation. It's beautiful, and much faster than anything above, especially given that it's performing a global search (not just over the interval specified).
+							</p>
+
+							<p>
 							It worked wonders for both the jpgs and tifs, including the infamous emir. Note that the really large offsets are a consequence of the fact that it returns x, y that are positive. In a image that is 3900 pixels wide, a shift 3800 to the right is the same as -100. 
 							This also proved to be useful for visual debugging, especially when working with the cathedral and emir images. For example, I could glean that the Green to Blue shift was fine in the case of the emir since both my pyramid and phase correlation method got (24, 49), but the red to blue shifts were very different.
 							</p>
@@ -287,7 +316,7 @@ def align_multiscale(im1, im2, depth):<br>
 								<div class="image-box">
 									<img src="media\phasecorr_emir.jpg"/>
 									<p class="caption">NCC <br> R->B = (41, 106),<br>G->B = (24, 49)</p>
-								</div>c:\Users\yashd\Desktop\cs180\cs180_private\cs180_proj1\outputs\unaligned_yash_bgr_jpg.jpg
+								</div>
 							</div>
 
 							<div class="image-container">
