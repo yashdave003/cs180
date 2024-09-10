@@ -111,7 +111,7 @@
 
 							<p>
 							I thought of using normalized L2 distance to compensate for brightness differences, and L1 distance because it might be more robust to outliers, but experimentally, this did not hold. 
-							The alignments were being thrown off due to the edges of the picture needlessly adding to the score, so I introduced a parameter k that specified what margins to disregard when computing the metric. I played around with k=5, 10, 20 and noticed that the outputs could be slightly sensitive to that factor. Note that both NCC and L2 Distance gave similar outputs, I picked L2 Distance for the following example with the cathedral, 
+							The alignments were being thrown off due to the edges of the picture needlessly adding to the score, so I introduced a parameter k that specified what margins to disregard when computing the metric. I played around with k=5, 10, 20 and noticed that the outputs could be slightly sensitive to that factor. Note that both NCC and L2 Distance gave similar outputs, I picked L2 Distance for the following example with the cathedral. Note how k=20 performs best, but k=10 performs worse than when k=5. Future steps could incorporate automatic cropping or hyperparameter tuning to pick the best value of k. 
 							</p>
 
 							<div class="image-container">
@@ -152,7 +152,7 @@
 						<header>
 							<h2>Multiscale Scale Images</h2>
 						</header>
-						<div class="content"">
+						<div class="content">
 							<p> With higher-resolution images, the same exhaustive search took too long. This called for the use of a pyramid scheme (not the scam). Effectively, the logic goes: downsample the image (while avoiding aliasing) till it is small enough to do a naive search, then go up to progressively higher resolutions, using a smaller [-2, 2] interval search to gradually mak finer-grained movements towards a reasonable offset. My pseudocode looked like:
 							</p>
 							<code  style="white-space:pre">
@@ -316,14 +316,14 @@ def align_multiscale(im1, im2, depth):<br>
 							</p>
 
 							<div class="image-container">
-								<div class="image-box">
+								<div class="image-box" style="width: 60%;">
 									<img src="media\phasecorr_emir.jpg"/>
 									<p class="caption">NCC <br> R->B = (41, 106),<br>G->B = (24, 49)</p>
 								</div>
 							</div>
 
 							<div class="image-container">
-								<div class="image-box">
+								<div class="image-box"  style="width: 60%;">
 									<img src="media\phasecorr_cathedral.jpg"/>
 									<p class="caption">NCC <br> R->B = (3, 12),<br>G->B = (2, 5)</p>
 								</div>
