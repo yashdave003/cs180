@@ -101,9 +101,9 @@
 							<p>I experimented with 4 metrics:
 								<ul class="feature-icons">
 									<li> L2 Distance: ||im1 - im2||_2, where ||x||_2 = sqrt(sum(x**2)) </li>
-									<li> Normalized L2 Distance: ||normalize(im1) - normalize(im2)||_2, normalize(x) = (x-mu(x))/std(xu)</li>
-									<li> L1 Distance: ||(im1 - im2)||_1, ||x||_1 = sum(abs(.)) </li>
-									<li> Normalized Cross-Correlation (NCC): (im1/||im1|| * im2/||im2||), * denotes an elementwise product</li>
+									<li> Normalized L2 Distance: ||normalize(im1) - normalize(im2)||_2, where normalize(x) = (x-mu(x))/std(xu)</li>
+									<li> L1 Distance: ||(im1 - im2)||_1, where ||x||_1 = sum(abs(x)) </li>
+									<li> Normalized Cross-Correlation (NCC): (im1/||im1|| * im2/||im2||), where * denotes an elementwise product</li>
 								</ul>
 								The broad approach was to exhaustively search about a [-15, 15] interval for different alignments of the green and red channel to the blue channel. For each offset, we calculate the metric and we pick the "best" one. In practice, I negated the NCC so that this meant picking the offset that minimizes the metric of choice.
 							
@@ -111,7 +111,7 @@
 
 							<p>
 							I thought of using normalized L2 distance to compensate for brightness differences, and L1 distance because it might be more robust to outliers, but experimentally, this did not hold. 
-							The alignments were being thrown off due to the edges of the picture needlessly adding to the score, so I introduced a parameter k that specified what margins to disregard when computing the metric. I played around with k=5, 10, 20 and noticed that the outputs could be slightly sensitive to that factor. Note that both NCC and L2 Distance gave similar outputs, I picked L2 Distance for the following example with the cathedral. Note how k=20 performs best, but k=10 performs worse than when k=5. Future steps could incorporate automatic cropping or hyperparameter tuning to pick the best value of k. 
+							The alignments were being thrown off due to the edges of the picture needlessly adding to the score, so I introduced a parameter k that specified what margins to disregard when computing the metric. I played around with k=5, 10, 20 and noticed that the outputs could be slightly sensitive to that factor. Note that both NCC and L2 Distance gave similar outputs, I picked L2 Distance for the following example with the cathedral. Note how k=20 performs best, but k=10 performs worse than when k=5. Future steps could incorporate automatic cropping or hyperparameter tuning to pick the best value of k. My function does also support float values of k between 0 and 1 (percentages of height or width), but I felt the hardcoded values were clearer to me. For the higher resolution images, this would have a marginal effect even with the multiscale approach described in the next section. 
 							</p>
 
 							<div class="image-container">
