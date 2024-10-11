@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>CS 180 Project 3: Face Morphing and Caricatures</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<meta name="description" content="CS 180 Project 3: Face Morphing and Caricatures" />
+		<meta name="keywords" content="CS, Computer Science, Face Morphing, Caricatures" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			body {
+				font-family: 'Arial', sans-serif;
+				font-size: 16px;
+				line-height: 1.6;
+				color: #333;
+				margin: 20px;
+				justify-content: center;
+				align-items: center;
+			}
+
+			h1, h2, h3, h4, h5, h6 {
+				font-family: 'Georgia', serif;
+				color: #222;
+			}
+
+			p {
+				margin-bottom: 15px;
+			}
+
+			a {
+				color: #007BFF;
+				text-decoration: none;
+			}
+
+			a:hover {
+				text-decoration: underline;
+			}
+
+			.caption {
+				font-size: 14px;
+				color: #555;
+			}
+
+			.image-container {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 20px;
+				margin: 20px 0;
+			}
+
+			.image-box {
+				text-align: center;
+			}
+
+			img {
+				max-width: 80%;
+				height: auto;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.image-container-large {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 20px;
+				margin: 20px 0;
+			}
+
+			.image-container-large .image-box {
+				text-align: center;
+			}
+
+			.image-container-large img {
+				max-width: 100%;
+				height: auto;
+				justify-content: center;
+				align-items: center;
+				box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+			}
+
+			.caption {
+				white-space: pre-line;
+				font-family: Arial, sans-serif;
+				font-size: 14px;
+			}
+
+			.center {
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+				width: 60%;
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Intro -->
+					<section class="intro">
+						<header>
+							<h1>CS 180 Project 3: My Journey with Face Morphing and Caricatures</h1>
+							<h3>Table of Contents</h3>
+							<ul class="actions">
+								<li><a href="#part1" class="arrow scrolly"><span class="label">Defining Correspondences</span></a></li>
+								<li><a href="#part2" class="arrow scrolly"><span class="label">Computing the "Mid-way Face"</span></a></li>
+								<li><a href="#part3" class="arrow scrolly"><span class="label">The Morph Sequence</span></a></li>
+								<li><a href="#part4" class="arrow scrolly"><span class="label">The "Mean face" of a population</span></a></li>
+								<li><a href="#part5" class="arrow scrolly"><span class="label">Caricatures: Extrapolating from the mean</span></a></li>
+								<li><a href="#bells-and-whistles" class="arrow scrolly"><span class="label">Bells and Whistles: Childhood Morph</span></a></li>
+							</ul>
+						</header>
+					</section>
+
+				<!-- Section -->
+				<section id="part1">
+					<header>
+						<h2>Part 1. Defining Correspondences</h2>
+					</header>
+					<div class="content">
+						<p>In this section, I define correspondences between my face and my mother's face.</p>
+						<div class="image-container">
+							<div class="image-box">
+								<img src="media/yash_triangulation.png" alt="My Triangulation" />
+								<p class="caption">My Face Triangulation</p>
+							</div>
+							<div class="image-box">
+								<img src="media/mummy_triangulation.png" alt="My Mother's Triangulation" />
+								<p class="caption">My Mother's Face Triangulation</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- Section -->
+				<section id="part2">
+					<header>
+						<h2>Part 2. Computing the "Mid-way Face"</h2>
+					</header>
+					<div class="content">
+						<p>Here I compute the mid-way face between my image and my mother's face.</p>
+						<div class="image-container">
+							<div class="image-box">
+								<img src="media/yash_mummy_midway.png" alt="Me-Mother Midway Face" />
+								<p class="caption">Midway Face Between Me and My Mother</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- Section -->
+				<section id="part3">
+					<header>
+						<h2>Part 3. The Morph Sequence</h2>
+					</header>
+					<div class="content">
+						<p>This section shows the complete morph sequence I created between my face and my mother's.</p>
+						<div class="image-container">
+							<div class="image-box">
+								<img src="media/yash_mummy_full.gif" alt="Me to My Mother Morph Sequence" />
+								<p class="caption">Morph Sequence: Me to My Mother</p>
+							</div>
+						</div>
+
+						<p>For fun, I also did a morph from my grandfather to my father which was smoother.</p>
+						<div class="image-container">
+							<div class="image-box">
+								<img src="media/dada_papa_full.gif" alt="Me-Mother Midway Face" />
+								<p class="caption">Morph Sequence: My grandfather to father</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- Section -->
+				<section id="part4">
+					<header>
+						<h2>Part 4. The "Mean face" of a population</h2>
+					</header>
+					<div class="content">
+						<p>Here I compute and analyze the mean face of a population, and compare it with my own.</p>
+
+							<div class="image-box">
+								<img src="media/mean_dane_face.jpg" alt="Mean Dane Face" />
+								<p class="caption">Mean Face of Danish Population</p>
+							</div>
+							<div class="image-box">
+								<img src="media/correspond_mean_dane_yash.jpg" alt="Correspondence: Mean Dane and Me" />
+								<p class="caption">Correspondence Between Mean Dane Face and My Face</p>
+							</div>
+
+						<div class="image-container">
+							<div class="image-box">
+								<img src="media/mean_dane_on_yash.jpg" alt="Mean Dane on Me" />
+								<p class="caption">Mean Dane Face Mapped onto My Face</p>
+							</div>
+							<div class="image-box">
+								<img src="media/yash_on_mean_dane.jpg" alt="Me on Mean Dane" />
+								<p class="caption">My Face Mapped onto Mean Dane Face</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- Section -->
+				<section id="part5">
+					<header>
+						<h2>Part 5. Caricatures: Extrapolating from the mean</h2>
+					</header>
+					<div class="content">
+						<p>In this section, I create caricatures by extrapolating from the mean face.</p>
+
+							<div class="image-box">
+								<img src="media/caricatures_1.png" alt="Caricatures Set 1" />
+								<p class="caption">My Caricatures: Set 1</p>
+							</div>
+							<div class="image-box">
+								<img src="media/caricatures_2.png" alt="Caricatures Set 2" />
+								<p class="caption">My Caricatures: Set 2</p>
+							</div>
+
+					</div>
+				</section>
+
+				<!-- Section -->
+				<section id="bells-and-whistles">
+					<header>
+						<h2>Bells and Whistles: Childhood Morph</h2>
+					</header>
+					<div class="content">
+						<p>As an extra feature, I've created a childhood morph sequence of myself.</p>
+						<div class="image-container">
+							<div class="image-box">
+								<img src="media/mega_gif.gif" alt="My Childhood Morph Sequence" />
+								<p class="caption">My Childhood to Adult Morph Sequence</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
