@@ -1,0 +1,289 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>CS 180 Project 4: Image Warping and Mosaicing</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<meta name="description" content="CS 180 Project 3: Face Morphing and Caricatures" />
+		<meta name="keywords" content="CS, Computer Science, Face Morphing, Caricatures" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			body {
+				font-family: 'Arial', sans-serif;
+				font-size: 16px;
+				line-height: 1.6;
+				color: #333;
+				margin: 20px;
+				justify-content: center;
+				align-items: center;
+			}
+
+			h1, h2, h3, h4, h5, h6 {
+				font-family: 'Georgia', serif;
+				color: #222;
+			}
+
+			p {
+				margin-bottom: 15px;
+			}
+
+			a {
+				color: #007BFF;
+				text-decoration: none;
+			}
+
+			a:hover {
+				text-decoration: underline;
+			}
+
+			.caption {
+				font-size: 14px;
+				color: #555;
+			}
+
+			.image-container {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 20px;
+				margin: 20px 0;
+			}
+
+			.image-box {
+				text-align: center;
+			}
+
+			.image-box img {
+				border: 2px solid #000; /* Black border */
+				box-shadow: 0 0 5px rgba(0,0,0,0.3); /* Optional: adds a subtle shadow */
+			}
+
+			img {
+				max-width: 80%;
+				height: auto;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.image-container-large {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 20px;
+				margin: 20px 0;
+			}
+
+			.image-container-large .image-box {
+				text-align: center;
+			}
+
+			.image-container-large img {
+				max-width: 100%;
+				height: auto;
+				justify-content: center;
+				align-items: center;
+				box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+			}
+
+			.caption {
+				white-space: pre-line;
+				font-family: Arial, sans-serif;
+				font-size: 14px;
+			}
+
+			.center {
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+				width: 60%;
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Intro -->
+				<section class="intro">
+					<header>
+						<h1>CS 180 Project: Image Mosaics</h1>
+						<h3>Table of Contents</h3>
+						<ul class="actions">
+							<li><a href="#part1" class="arrow scrolly"><span class="label">Introduction</span></a></li>
+							<li><a href="#part2" class="arrow scrolly"><span class="label">Computing Homographies and Warping</span></a></li>
+							<li><a href="#part3" class="arrow scrolly"><span class="label">Image Rectification</span></a></li>
+							<li><a href="#part4" class="arrow scrolly"><span class="label">Mosaics</span></a></li>
+						</ul>
+					</header>
+				</section>
+
+				<!-- Section -->
+				<section id="part1">
+					<header>
+						<h2>Part 1. Introduction</h2>
+					</header>
+					<div class="content">
+						<p>As part of Project 4A, these are the steps I followed:</p>
+						<ol>
+							<li>Shoot and digitize pictures</li>
+							<li>Recover homographies</li>
+							<li>Warp the images</li>
+							<li>Blend the images into a mosaic</li>
+						</ol>
+					</div>
+				</section>
+
+				<!-- Section -->
+				<section id="part2">
+					<header>
+						<h2>Part 2: Computing Homographies and Warping</h2>
+					</header>
+					<div class="content">
+						<p>The <code>compute_homography</code> function calculates the homography matrix between two sets of 
+							corresponding points. The function takes two input arrays: points from the first image and corresponding points in the target image. 
+							It constructs a system of linear equations and solves them using the least squares method to find the optimal homography 
+							matrix.</p>
+						
+						<p>The <code>warp_image</code> function applies the computed homography to warp an input image. It uses the inverse of the homography matrix to map coordinates from the output image back to the input image. The function then uses bilinear interpolation to sample pixel values from the input image, ensuring smooth transitions between pixels in the warped result.</p>
+					</div>
+				</section>
+
+				<!-- Section -->
+				<section id="part3">
+					<header>
+						<h2>Part 3: Image Rectification</h2>
+					</header>
+					<div class="content">
+						<p> I picked an assortment of things to rectify: a parking sign near my apartment, the whiteboard in Evans 1015 (ft. CS 180) and a lamppost. You can see the correspondence points I picked marked in red. I was particularly happy with the rectification of the lamppost given how small the region was. For the board, I drew out COMPSCI 180 in bubble letters to also verify that the transformation preserved text written on the same plane as the changes.</p>
+						<div class="image-container">
+							<div class="image-box">
+								<img src="media/parking_rectified.png" alt="Original Parking" />
+
+							</div>
+						</div>
+						<div class="image-container">
+							<div class="image-box">
+								<img src="media/board_rectified.jpg" alt="Original Parking" />
+
+							</div>
+						</div>
+						<div class="image-container">
+							<div class="image-box">
+								<img src="media/lamppost_rectified.png" alt="Original Parking" />
+							</div>
+						</div>
+					</div>
+				</section>
+
+					<!-- Section -->
+<section id="part4">
+    <header>
+        <h2>Part 4: Mosaics</h2>
+    </header>
+    <div class="content">
+        <p>I am a fan of landscapes so a lot of my mosaics stem from pictures I took from the Campanile (Northside, Bayview) and at the rooftop of the Standard (sosc, short for Social Sciences Bldg). 
+			In addition, and for some variety, I also took a couple of pictures of my room and stitched them together to show that the process works for nearby objects as well.</p>
+
+			<p>My approach was:</p>
+			<ul>
+				<li>Use the <a href="https://cal-cs180.github.io/fa23/hw/proj3/tool.html">correspondence tool from Project 3</a> to match features in two images</li>
+				<li>Compute the midway points using them (<code>center_pts</code>)</li>
+				<li>Project each image onto the midway points</li>
+				<li>Create two masks using both <code>left_warped</code> and <code>right_warped</code></li>
+				<li>Apply cv2.distanceTransform to get more gradual masks and prevent sharp lines</li>
+				<li>Perform a weighted sum using these masks and normalize accordingly to get the combined image</li>
+			</ul>
+
+			I included a naive combination of the two warped images by just taking an average as well. Some of the high filter features (like text in the wall picture) appear slightly blurry as they don't precisely line up with their opposing counterparts.
+		<!-- SOSC Mosaic -->
+        <h3>SOSC Mosaic</h3>
+
+		For this first mosaic, I also included the left and right masks I obtained for each image.
+
+			<div class="image-container">
+				<div class="image-box">
+					<img src="media/leftmask_mosaic_sosc.jpg" alt="SOSC Left Distance Transform Mask" />
+					<p class="caption">SOSC: Left Mask</p>
+				</div>
+				<div class="image-box">
+					<img src="media/rightmask_mosaic_sosc.jpg" alt="SOSC Right Distance Transform Mask" />
+					<p class="caption">SOSC: Right Mask</p>
+				</div>
+			</div>
+        
+        <div class="image-box">
+            <img src="media/og_mosaic_sosc.png" alt="SOSC Distance Transform Masks" />
+            <p class="caption">SOSC: Distance Transform Masks</p>
+        </div>
+        <div class="image-box">
+            <img src="media/warped_mosaic_sosc.png" alt="SOSC Warped Images" />
+            <p class="caption">SOSC: Warped Images</p>
+        </div>
+        <div class="image-box">
+            <img src="media/combined_mosaic_sosc.png" alt="SOSC Combined Images" />
+            <p class="caption">SOSC: Naive Combine and Distance Transform</p>
+        </div>
+
+        <!-- Northside Mosaic -->
+        <h3>Northside Mosaic</h3>
+        <div class="image-box">
+            <img src="media/og_mosaic_northside.png" alt="Northside Original Images" />
+            <p class="caption">Northside: Original Images with Points</p>
+        </div>
+        <div class="image-box">
+            <img src="media/warped_mosaic_northside.png" alt="Northside Warped Images" />
+            <p class="caption">Northside: Warped Images</p>
+        </div>
+        <div class="image-box">
+            <img src="media/combined_mosaic_northside.png" alt="Northside Combined Images" />
+            <p class="caption">Northside: Naive Combine and Distance Transform</p>
+        </div>
+
+        <!-- Bayview Mosaic -->
+        <h3>Bayview Mosaic</h3>
+        <div class="image-box">
+            <img src="media/og_mosaic_bayview.png" alt="Bayview Original Images" />
+            <p class="caption">Bayview: Original Images with Points</p>
+        </div>
+        <div class="image-box">
+            <img src="media/warped_mosaic_bayview.png" alt="Bayview Warped Images" />
+            <p class="caption">Bayview: Warped Images</p>
+        </div>
+        <div class="image-box">
+            <img src="media/combined_mosaic_bayview_vert.png" alt="Bayview Combined Images" />
+            <p class="caption">Bayview: Naive Combine and Distance Transform</p>
+        </div>
+
+        <!-- Wall Mosaic -->
+        <h3>Wall Mosaic</h3>
+        <div class="image-box">
+            <img src="media/og_mosaic_wall.png" alt="Wall Original Images" />
+            <p class="caption">Wall: Original Images with Points</p>
+        </div>
+        <div class="image-box">
+            <img src="media/warped_mosaic_wall.png" alt="Wall Warped Images" />
+            <p class="caption">Wall: Warped Images</p>
+        </div>
+        <div class="image-box">
+            <img src="media/combined_mosaic_wall.png" alt="Wall Combined Images" />
+            <p class="caption">Wall: Naive Combine and Distance Transform</p>
+        </div>
+    </div>
+</section>
+						
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
