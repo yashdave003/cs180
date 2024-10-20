@@ -126,13 +126,7 @@
 						<h2>Part 1. Introduction</h2>
 					</header>
 					<div class="content">
-						<p>As part of Project 4A, these are the steps I followed:</p>
-						<ol>
-							<li>Shoot and digitize pictures</li>
-							<li>Recover homographies</li>
-							<li>Warp the images</li>
-							<li>Blend the images into a mosaic</li>
-						</ol>
+						<p>In Project 4A, I took a bunch of pictures, recovered homographies, warped images and then blended them together to form mosaics and panoramas.</p>
 					</div>
 				</section>
 
@@ -197,7 +191,12 @@
 				<li>Perform a weighted sum using these masks and normalize accordingly to get the combined image</li>
 			</ul>
 
+			<p>
 			I included a naive combination of the two warped images by just taking an average as well. Some of the high filter features (like text in the wall picture) appear slightly blurry as they don't precisely line up with their opposing counterparts.
+			I fiddled around with laplacian pyramids and sharpening but, in my opinion, it made the pictures worse. I attributed this to the warping step, wherein some pixels would necessarily get distributed across others when doing the bilinear interpolation. 
+			This is particularly pronounced for wide-angle shots (like Bayview), and was unlikely to be fixed by emphasizing the high filter components.
+			</p>
+			
 		<!-- SOSC Mosaic -->
         <h3>SOSC Mosaic</h3>
 
@@ -273,7 +272,6 @@
         </div>
     </div>
 </section>
-						
 
 			</div>
 
