@@ -107,18 +107,33 @@
 			<div id="wrapper">
 
 				<!-- Intro -->
-				<section class="intro">
-					<header>
-						<h1>CS 180 Project: Image Mosaics</h1>
-						<h3>Table of Contents</h3>
-						<ul class="actions">
-							<li><a href="#part1" class="arrow scrolly"><span class="label">Introduction</span></a></li>
-							<li><a href="#part2" class="arrow scrolly"><span class="label">Computing Homographies and Warping</span></a></li>
-							<li><a href="#part3" class="arrow scrolly"><span class="label">Image Rectification</span></a></li>
-							<li><a href="#part4" class="arrow scrolly"><span class="label">Mosaics</span></a></li>
-						</ul>
-					</header>
-				</section>
+<section class="intro">
+    <header>
+        <h1>CS 180 Project: Image Mosaics</h1>
+        <h1>Part A & B</h1>
+        <h3>Table of Contents</h3>
+        
+        <!-- Part A -->
+        <h4>Part A</h4>
+        <ul class="actions">
+            <li><a href="#part1" class="arrow scrolly"><span class="label">Introduction</span></a></li>
+            <li><a href="#part2" class="arrow scrolly"><span class="label">Computing Homographies and Warping</span></a></li>
+            <li><a href="#part3" class="arrow scrolly"><span class="label">Image Rectification</span></a></li>
+            <li><a href="#part4" class="arrow scrolly"><span class="label">Mosaics</span></a></li>
+        </ul>
+        
+        <!-- Part B -->
+        <h4>Part B</h4>
+        <ul class="actions">
+            <li><a href="#part5" class="arrow scrolly"><span class="label">Detecting Corners</span></a></li>
+            <li><a href="#part6" class="arrow scrolly"><span class="label">Extracting Feature Descriptors</span></a></li>
+            <li><a href="#part7" class="arrow scrolly"><span class="label">Matching Feature Descriptors</span></a></li>
+            <li><a href="#part8" class="arrow scrolly"><span class="label">Random Sample Consensus (RANSAC)</span></a></li>
+            <li><a href="#part9" class="arrow scrolly"><span class="label">Autostitching Mosaics</span></a></li>
+            <li><a href="#part10" class="arrow scrolly"><span class="label">Reflection</span></a></li>
+        </ul>
+    </header>
+</section>
 
 				<!-- Section -->
 				<section id="part1">
@@ -273,7 +288,281 @@
     </div>
 </section>
 
-			</div>
+<!-- Section -->
+<section id="part5">
+    <header>
+		<h1>Part B</h1>
+        <h2>Detecting Corners</h2>
+    </header>
+    <div class="content">
+        <p>In my implementation, I began by detecting corners using the Harris algorithm through <code>get_harris_corners()</code>. After extracting the corner scores into a vector using <code>scores = h[corners[:, 0], corners[:, 1]]</code>, I moved on to applying Adaptive Non-Maximal Suppression (ANMS). This crucial step helps me identify the strongest corners while ensuring they remain evenly distributed across the image.</p>
+
+    <p>The ANMS process required me to calculate pairwise distances using <code>dist2()</code>. I leveraged numpy broadcasting to check if <code>f(x_i) < c_robust * f(x_j)</code> held true for each corner pair, creating a <code>larger_mask</code>. By applying this mask to my distances through <code>masked_dists = dists * larger_mask</code>, I effectively set non-qualifying corner pairs to infinity to exclude them from minimization.</p>
+
+    <p>Computing the minimum radii for each point was my next step, which I accomplished with <code>radii = np.min(masked_dists, axis=1)</code>. To finalize the process, I sorted the indices by decreasing radii and used these to reorder my original corner list. With a simple slice of <code>points = sorted_corners[:num_corners]</code>, I obtained my best corners. For this project, I used num_corners=200. </p>
+
+    <div class="image-container">
+        <div class="image-box">
+            <img src="media\harris_sosc.jpg" alt="ANMS SOSC">
+            <div class="caption">Harris Corner Detection</div>
+        </div>
+
+		<div class="image-box">
+			<img src="media\anms_sosc.jpg" alt="Harris SOSC">
+			<div class="caption">ANMS Corner Detection</div>
+		</div>
+    </div>
+
+	I combined the plots above for the rest of the pictures to show all the harris corners (blue) and also the corners left after ANMS (orange). Note how in the pictures with rectangular buildings (Evans, Social Sciences Building), how the edges are picked up quite well even after ANMS.
+
+	<div class="image-container">
+        <div class="image-box">
+            <img src="media\anms_harris_wall.png" alt="ANMS SOSC">
+            <div class="caption">ANMS + Harris Corner Detection (Wall)</div>
+        </div>
+
+		<div class="image-box">
+            <img src="media\anms_harris_northside.png" alt="ANMS SOSC">
+            <div class="caption">ANMS + Harris Corner Detection (Northside)</div>
+        </div>
+
+		<div class="image-box">
+            <img src="media\anms_harris_arch.png" alt="ANMS SOSC">
+            <div class="caption">ANMS + Harris Corner Detection (Arch)</div>
+        </div>
+    </div>
+
+	<div class="image-container">
+        
+
+		<div class="image-box">
+            <img src="media\anms_harris_oakland.png" alt="ANMS SOSC">
+            <div class="caption">ANMS + Harris Corner Detection (Oakland)</div>
+        </div>
+    </div>
+
+	<div class="image-box">
+		<img src="media\anms_harris_bayview.png" alt="ANMS SOSC">
+		<div class="caption">ANMS + Harris Corner Detection (Bayview)</div>
+	</div>
+
+	<p>As an interesting failure case for if you don't specify enough corners, consider the following outcome when num_corners=50.</p>
+
+	<div class="image-box">
+		<img src="media\failure_auto_og_mosaic_sosc.png" alt="ANMS SOSC">
+		<div class="caption">Failure: Not enough points</div>
+	</div>
+	<div class="image-box">
+		<img src="media\failure_auto_final_sosc.jpg" alt="Harris SOSC">
+		<div class="caption">Failure: Warped to another dimension</div>
+	</div>
+
+</section>
+
+<!-- Section -->
+<section id="part6">
+    <header>
+        <h2>Extracting Feature Descriptors</h2>
+    </header>
+    <div class="content">
+
+		<p>I implemented a series of functions to extract and process image features around detected corner points. The process begins with <code>extract_patch(image, point, patch_size=40)</code>, which extracts a 40x40 pixel square centered on each corner point. It carefully handles edge cases by skipping corners too close to image boundaries.</p>
+
+		<p>These patches then undergo two transformations. First, <code>downsample_patch(patch)</code> reduces each patch to 20% of its original size using scikit-image's rescaling function with channel_axis=2. Then, <code>normalize_patch(patch)</code> standardizes the patch by subtracting its mean and dividing by its standard deviation, making features more robust to lighting variations.</p>
+		
+		<p>Finally, <code>extract_features(image, corners)</code> ties everything together, processing each corner point through this pipeline. It maintains lists of both the original downsampled features and their normalized versions, while also tracking which corner points produced valid patches. This comprehensive approach ensures we have reliable feature descriptors for matching across images. Below I show both the unnormalized features (easier to understand and display) and the normalized features.</p>
+    <div class="image-container">
+        <div class="image-box">
+            <img src="media\unnormed_features_sosc.png" alt="Normed Features SOSC">
+            <div class="caption">Unnormalized Features (Social Sciences Bldg)</div>
+        </div>
+    </div>
+
+	<div class="image-box">
+		<img src="media\normed_features_sosc.png" alt="Unnormed Features SOSC">
+		<div class="caption">Normalized Features (Social Sciences Bldg)</div>
+	</div>
+
+
+	For general reference, the unnormalized features for bayview, northside, oakland and wall are also shown below:
+
+	<div class="image-box">
+		<img src="media\unnormed_features_bayview.png" alt="Normed Features SOSC">
+		<div class="caption">Unnormalized Features (Bayview)</div>
+	</div>
+	<div class="image-box">
+		<img src="media\unnormed_features_wall.png" alt="Normed Features SOSC">
+		<div class="caption">Unnormalized Features (Wall)</div>
+	</div>
+	<div class="image-box">
+		<img src="media\unnormed_features_northside.png" alt="Normed Features SOSC">
+		<div class="caption">Unnormalized Features (Northside)</div>
+	</div>
+	<div class="image-box">
+		<img src="media\unnormed_features_arch.png" alt="Normed Features SOSC">
+		<div class="caption">Unnormalized Features (Arch)</div>
+	</div>
+	<div class="image-box">
+		<img src="media\unnormed_features_oakland.png" alt="Normed Features SOSC">
+		<div class="caption">Unnormalized Features (Oakland)</div>
+	</div>
+
+</section>
+
+<!-- Section -->
+<section id="part7">
+    <header>
+        <h2>Matching Feature Descriptors</h2>
+    </header>
+    <div class="content">
+
+		<p>To match features between images, I implemented a function that computes the Sum of Squared Differences (SSD) between all possible feature pairs. For each feature in the first image, it finds its two closest matches in the second image. Following Lowe's ratio test, I only keep matches where the best match is significantly better than the second-best (controlled by the ratio threshold of 0.3). This helps eliminate ambiguous matches, returning only the most reliable feature correspondences between the two images.</p>
+		<p>Pay attention to the red point in the top left corner of the Social Sciences Bldg picture, and the point near Mt. Tamalpais in the bayview picture. We shall revisit them after RANSAC to see if they made the cut.</p>
+        <div class="image-box">
+            <img src="media\actual_matched_features_sosc.png" alt="SOSC Matched Features">
+            <div class="caption">Matched Features</div>
+        </div>
+
+		<div class="image-box">
+            <img src="media\actual_matched_features_bayview.png" alt="SOSC Matched Features">
+            <div class="caption">Matched Features</div>
+        </div>
+</section>
+
+<!-- Section -->
+<section id="part8">
+    <header>
+        <h2>RANdom Sample Consensus (RANSAC)</h2>
+    </header>
+    <div class="content">
+		<p>Points that fall within a 5-pixel threshold of their expected positions are considered inliers - these are matches that are geometrically consistent with the current homography. If the current iteration finds more inliers than any previous attempt, I update my "best" homography and save the mask identifying these inlier points. This approach ensures that outliers (incorrect matches) don't influence the final transformation, as they're unlikely to consistently agree with the correct geometric relationship between the images.</p>
+
+		<p>Finally, once I've identified the set of inlier points that yield the best consensus, I refine the homography by recomputing it using all inlier points rather than just the initial four. This refinement step produces a more accurate transformation that captures the true geometric relationship between the images.</p>
+		
+		<p>As you can see below, the red point in the top left portion of the picture in the Matched Features section is no longer present after RANSAC. While the "edges" within the sky look similar, because they are not consistent with the all the other correspondences, they are not included.</p>
+	<div class="image-box">
+		<img src="media\sosc_matched_features.png" alt="Matched Features Bayview">
+		<div class="caption">Matched Features after RANSAC (Bayview)</div>
+	</div>
+
+	<p>You can note that the point at Mt. Tamalpais was also excluded after RANSAC. I have also included the matched features after RANSAC for the other mosaics created, which you could expect to be slightly different to matched features before RANSAC:</p>
+	
+    <div class="image-box">
+        <img src="media\matched_features_bayview.png" alt="Matched Features Bayview">
+        <div class="caption">Matched Features after RANSAC (Bayview)</div>
+    </div>
+    <div class="image-box">
+        <img src="media\matched_features_wall.png" alt="Matched Features Wall">
+        <div class="caption">Matched Features after RANSAC (Wall)</div>
+    </div>
+    <div class="image-box">
+        <img src="media\matched_features_northside.png" alt="Matched Features Northside">
+        <div class="caption">Matched Features after RANSAC (Northside)</div>
+    </div>
+    <div class="image-box">
+        <img src="media\matched_features_arch.png" alt="Matched Features Arch">
+        <div class="caption">Matched Features after RANSAC (Arch)</div>
+    </div>
+    <div class="image-box">
+        <img src="media\matched_features_oakland.png" alt="Matched Features Oakland">
+        <div class="caption">Matched Features after RANSAC (Oakland)</div>
+    </div>
+</section>
+
+<!-- Section -->
+<section id="part9">
+    <header>
+        <h2>Autostitching Mosaics</h2>
+    </header>
+    <div class="content">
+
+	<p>This part was simple given that all the setup was done in Part A. Now that we automatically obtain a reliable set of correspondences between two images, we can once again find the center points, compute the homography that warps the images accordingly and then blend them. I did not use the homography returned by RANSAC since I was combining them in this particular fashion.</p>
+
+	<p>I was pleasantly surprised with the results. The pictures were less blurry than when I manually did the correspondences, likely because I could not be as precise with the pixels. This is particularly evident with the wall picture, where the writing isn't as blurred as before. This also provided further confirmation that additional blending would not have helped because I was simply limited by the manual correspondences. Moreover, there were simply more correspondences automatically found (especially prevalent in the wall, northside pictures) than I found and that made the results more reliable.</p>
+	<div class="image-container">
+		<div class="image-box">
+            <img src="media\manual_final_sosc.jpg" alt="Normed Features SOSC">
+            <div class="caption">Manual Final Mosaic</div>
+        </div>
+        <div class="image-box">
+            <img src="media\auto_final_sosc.jpg" alt="Normed Features SOSC">
+            <div class="caption">Auto Final Mosaic</div>
+        </div>
+    </div>
+
+	<div class="image-box">
+		<img src="media\manual_final_bayview.jpg" alt="Normed Features SOSC">
+		<div class="caption">Manual Final Mosaic</div>
+	</div>
+	<div class="image-box">
+		<img src="media\auto_final_bayview.jpg" alt="Normed Features SOSC">
+		<div class="caption">Auto Final Mosaic</div>
+	</div>
+
+	<div class="image-container">
+		<div class="image-box">
+            <img src="media\manual_final_wall.jpg" alt="Normed Features SOSC">
+            <div class="caption">Manual Final Mosaic</div>
+        </div>
+        <div class="image-box">
+            <img src="media\auto_final_wall copy.jpg" alt="Normed Features SOSC">
+            <div class="caption">Auto Final Mosaic</div>
+        </div>
+    </div>
+
+	<div class="image-container">
+		<div class="image-box">
+            <img src="media\manual_final_northside.jpg" alt="Normed Features SOSC">
+            <div class="caption">Manual Final Mosaic</div>
+        </div>
+        <div class="image-box">
+            <img src="media\auto_final_northside.jpg" alt="Normed Features SOSC">
+            <div class="caption">Auto Final Mosaic</div>
+        </div>
+    </div>
+
+	<div class="image-container">
+        <div class="image-box">
+            <img src="media\auto_final_arch.jpg" alt="Normed Features SOSC">
+            <div class="caption">Auto Mosaic (no Manual)</div>
+        </div>
+    </div>
+
+	<div class="image-container">
+        <div class="image-box">
+            <img src="media\auto_final_oakland.jpg" alt="Normed Features SOSC">
+            <div class="caption">Auto Mosaic (no Manual)</div>
+        </div>
+    </div>
+
+	</div>
+</section>
+
+<!-- Section -->
+<section id="part10">
+    <header>
+        <h2>Reflections</h2>
+    </header>
+    <div class="content">
+		<p>
+		In terms of cool things I learned, I realised I am bad at manually doing correspondences. Automatically stitching images was ultimately (1) more efficient in terms of time (2) but also better quality on average. The process of extracting features was also super cool as it sort of felt like a precursor to all the more complicated stuff that comes with CNNs and learned filters.</p>
+
+		<p>I'm also inspired to try cool new types of panoramas. I recently rewatched Spiderman: Across the Spiderverse recently, and the second I saw this shot I saw there was scope to do something. While the manual correspondences were possible, doing it automatically just felt so much cooler. Fun bonus result below, using screenshots from the movie:
+	</p>
+	<div class="image-box">
+		<img src="media\auto_og_mosaic_spiderverse.png" alt="Normed Features SOSC">
+		<div class="caption">Final Mosaic</div>
+	</div>
+
+	<div class="image-container">
+		
+        <div class="image-box">
+            <img src="media\auto_final_spiderverse.jpg" alt="Normed Features SOSC">
+            <div class="caption">Final Mosaic</div>
+        </div>
+    </div>
+
+	</section>
 
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
