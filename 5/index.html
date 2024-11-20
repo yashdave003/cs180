@@ -127,6 +127,8 @@
 					<h1>CS 180 Project: Diffusion Models and Image Processing</h1>
 					<h3>Table of Contents</h3>
 					
+					<!-- Part A -->
+					<h4>Part A: Implementation and Analysis</h4>
 					<ul class="actions">
 						<li><a href="#setup" class="arrow scrolly"><span class="label">Part 0: Setup</span></a></li>
 						
@@ -147,6 +149,31 @@
 							<li><a href="#anagrams" class="arrow scrolly">1.8 Visual Anagrams</a></li>
 							<li><a href="#hybrid" class="arrow scrolly">1.9 Hybrid Images</a></li>
 						</ul>
+					</ul>
+				
+					<!-- Part B -->
+					<h4>Part B: Model Training and Development</h4>
+					<ul class="actions">
+						<li><a href="#single-step" class="arrow scrolly"><span class="label">Part 1: Training a Single-Step Denoising UNet</span></a></li>
+						<ul class="nested-list">
+							<li><a href="#unet-impl" class="arrow scrolly">1.1 Implementing the UNet</a></li>
+							<li><a href="#unet-training" class="arrow scrolly">1.2 Using the UNet to Train a Denoiser</a></li>
+							<ul class="nested-list">
+								<li><a href="#training" class="arrow scrolly">1.2.1 Training</a></li>
+								<li><a href="#ood-testing" class="arrow scrolly">1.2.2 Out-of-Distribution Testing</a></li>
+							</ul>
+						</ul>
+				
+						<li><a href="#diffusion-training" class="arrow scrolly"><span class="label">Part 2: Training a Diffusion Model</span></a></li>
+						<ul class="nested-list">
+							<li><a href="#time-conditioning" class="arrow scrolly">2.1 Adding Time Conditioning to UNet</a></li>
+							<li><a href="#unet-training-2" class="arrow scrolly">2.2 Training the UNet</a></li>
+							<li><a href="#unet-sampling" class="arrow scrolly">2.3 Sampling from the UNet</a></li>
+							<li><a href="#class-conditioning" class="arrow scrolly">2.4 Adding Class-Conditioning to UNet</a></li>
+							<li><a href="#class-sampling" class="arrow scrolly">2.5 Sampling from the Class-Conditioned UNet</a></li>
+						</ul>
+				
+						<li><a href="#bells-whistles" class="arrow scrolly"><span class="label">Bells and Whistles</span></a></li>
 					</ul>
 				</header>
 			</section>
@@ -418,20 +445,41 @@
 
 				<section id="anagrams" class="section">
 					<h3>1.8 Visual Anagrams</h3>
+					<p>
+						The first two pictures were the best visual anagrams I got when combining the prompts, "an oil painting of an old man" and "an oil painting of people around a campfire".
+						The 3rd picture I have included for fun because the anagram is fully right side up - I think both aspects of the picture are quite clear and meld together surprisingly well.
+					</p>
 					<div class="image-container">
-						
 						<div class="image-box">
 							<img src="media\man_campfire_1.jpg" alt="Output with num=10" class="enlarged-image">
-							<div class="caption"> Original </div>
+							<div class="caption"> Old Man + Campfire Anagram </div>
 						</div>
 						<div class="image-box">
 							<img src="media\man_campfire_2.jpg" alt="Output with num=10" class="enlarged-image">
-							<div class="caption"> Original </div>
+							<div class="caption"> Old Man + Campfire Anagram  </div>
 						</div>
 
 						<div class="image-box">
 							<img src="media\man_campfire.jpg" alt="Output with num=10" class="enlarged-image">
-							<div class="caption"> Original </div>
+							<div class="caption"> Old Man + Campfire Right-side Up </div>
+						</div>
+					</div>
+					<p>
+						I chose to incorporate dogs into sceneries after playing around with some other combinations. Making anagrams combining two sceneries sometimes proved to be difficult, as did combining weaker prompts (eg. a photo of a man, a photo of a hipster barista) with landscapes that tended to dominate. The ones below were the best as the dogs are strikingly clear, especially the second one.
+						For the third bonus anagram, it honestly felt like both the coast and rocket were quite prominent even without flipping it over so I chose to include it.
+					</p>
+					<div class="image-container">
+						<div class="image-box">
+							<img src="media\snowy_dog_anagram.png" alt="Output with num=10" class="enlarged-image">
+							<div class="caption"> Snowy Village + Dog Anagram </div>
+						</div>
+						<div class="image-box">
+							<img src="media\amalfi_dog_anagram.png" alt="Output with num=10" class="enlarged-image">
+							<div class="caption"> Amalfi Coast + Dog Anagram </div>
+						</div>
+						<div class="image-box">
+							<img src="media\amalfi_rocket.jpg" alt="Output with num=10" class="enlarged-image">
+							<div class="caption"> Amalfi Coast + Rocket Anagram </div>
 						</div>
 					</div>
 
@@ -439,8 +487,106 @@
 
 				<section id="hybrid" class="section">
 					<h3>1.9 Hybrid Images</h3>
-					<!-- Content will be added here -->
+					<div class="image-container">
+						<div class="image-box">
+							<img src="media\skull_waterfall_hybrid_1.png" alt="Output with num=10" class="enlarged-image">
+							<div class="caption"> Skull (Far) + Waterfall (Close) </div>
+						</div>
+						<div class="image-box">
+							<img src="media\skull_waterfall_hybrid_3.png" alt="Output with num=10" class="enlarged-image">
+							<div class="caption"> Skull (Far) + Waterfall (Close)  </div>
+						</div>
+						<div class="image-box">
+							<img src="media\skull_waterfall_hybrid_2.png" alt="Output with num=10" class="enlarged-image">
+							<div class="caption"> Skull (Far) + Waterfall (Close)  </div>
+						</div>
+					</div>
+
+					<div class="image-container">
+						<div class="image-box">
+							<img src="media\dog_campfire_hybrid.png" alt="Output with num=10" class="enlarged-image">
+							<div class="caption"> Campfire (Close) + Dog (Far) </div>
+						</div>
+						<div class="image-box">
+							<img src="media\rocket_campfire_hybrid_1.png" alt="Output with num=10" class="enlarged-image">
+							<div class="caption"> Campfire (Close) + Rocket (Far)  </div>
+						</div>
+					</div>
 				</section>
+
+				<!-- Part B Sections -->
+<section id="single-step" class="section">
+    <h2>Part 1: Training a Single-Step Denoising UNet</h2>
+    
+    <section id="unet-impl" class="section">
+        <h3>1.1 Implementing the UNet</h3>
+        <div class="image-box">
+			<img src="media\fig1.jpg">
+		</div>
+    </section>
+
+    <section id="unet-training" class="section">
+        <h3>1.2 Using the UNet to Train a Denoiser</h3>
+
+		<div class="image-box">
+			<img src="media\fig3_noise_on_mnist.png">
+		</div>
+        
+        <section id="training" class="section">
+            <h4>1.2.1 Training</h4>
+            <div class="image-box">
+				<img src="media\fig4_training_loss_curve.png">
+			</div>
+			<div class="image-box">
+				<img src="media\fig5_test_epoch_1.png">
+			</div>
+			<div class="image-box">
+				<img src="media\fig6_test_epoch_5.png">
+			</div>
+        </section>
+
+        <section id="ood-testing" class="section">
+            <h4>1.2.2 Out-of-Distribution Testing</h4>
+            <div class="image-box">
+				<img src="media\fig7_ood.png">
+			</div>
+        </section>
+    </section>
+</section>
+
+<section id="diffusion-training" class="section">
+    <h2>Part 2: Training a Diffusion Model</h2>
+    
+    <section id="time-conditioning" class="section">
+        <h3>2.1 Adding Time Conditioning to UNet</h3>
+        <!-- Content will be added here -->
+    </section>
+
+    <section id="unet-training-2" class="section">
+        <h3>2.2 Training the UNet</h3>
+        <!-- Content will be added here -->
+    </section>
+
+    <section id="unet-sampling" class="section">
+        <h3>2.3 Sampling from the UNet</h3>
+        <!-- Content will be added here -->
+    </section>
+
+    <section id="class-conditioning" class="section">
+        <h3>2.4 Adding Class-Conditioning to UNet</h3>
+        <!-- Content will be added here -->
+    </section>
+
+    <section id="class-sampling" class="section">
+        <h3>2.5 Sampling from the Class-Conditioned UNet</h3>
+        <!-- Content will be added here -->
+    </section>
+</section>
+
+<section id="bells-whistles" class="section">
+    <h2>Bells and Whistles</h2>
+    <!-- Content will be added here -->
+</section>
 			</section>
 		</div>
 
