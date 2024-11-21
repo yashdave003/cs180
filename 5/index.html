@@ -487,6 +487,8 @@
 
 				<section id="hybrid" class="section">
 					<h3>1.9 Hybrid Images</h3>
+
+					I experimented with many different combinations and picked out what I thought worked best.
 					<div class="image-container">
 						<div class="image-box">
 							<img src="media\skull_waterfall_hybrid_1.png" alt="Output with num=10" class="enlarged-image">
@@ -547,6 +549,8 @@
 
         <section id="ood-testing" class="section">
             <h4>1.2.2 Out-of-Distribution Testing</h4>
+
+			We only trained our model using sigma=0.5, here we test ow it performs on different noise levels between 0 and 1. Note how it performs reasonably well for everything up until sigma=1.
             <div class="image-box">
 				<img src="media\fig7_ood.png">
 			</div>
@@ -559,27 +563,39 @@
     
     <section id="time-conditioning" class="section">
         <h3>2.1 Adding Time Conditioning to UNet</h3>
-        <!-- Content will be added here -->
+        <div class="image-box">
+			<img src="media\fig9_time_cond_unet.jpg">
+		</div>
     </section>
 
     <section id="unet-training-2" class="section">
         <h3>2.2 Training the UNet</h3>
-        <!-- Content will be added here -->
+		Here, I accidentally ran my model on twice as many epochs as needed (20), resulting in ~8000 iterations. You can observe we tend to converge earlier on itself.
+        <div class="image-box">
+			<img src="media\fig11_training_loss.png">
+		</div>
     </section>
 
     <section id="unet-sampling" class="section">
         <h3>2.3 Sampling from the UNet</h3>
+		Now I sample from my time-conditioned unet at epoch 5 and 20. Without controlling for class, the results don't neatly look like any number for the most part, but it's a useful proof of concept.
         <div class="image-box">
-			<img src="media\epoch_5_placeholder.jpg">
+			<img src="media\time_condition_epoch_5_1.png">
+			<div class="caption"> Epoch 5 (Time Conditioned) </div>
+
 		</div>
 		<div class="image-box">
-			<img src="media\epoch_5_placeholder.jpg">
+			<img src="media\time_condition_epoch_20_1.png">
+			<div class="caption"> Epoch 20 (Time Conditioned) </div>
 		</div>
     </section>
 
     <section id="class-conditioning" class="section">
         <h3>2.4 Adding Class-Conditioning to UNet</h3>
-        <!-- Content will be added here -->
+		It was at this point that I ran out of GPU credit, and my class conditioned model didn't fare too well.
+        <div class="image-box">
+			<img src="media\fig12_training_loss.png">
+		</div>
     </section>
 
     <section id="class-sampling" class="section">
