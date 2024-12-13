@@ -1,0 +1,485 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Final Project: Gradient Domain Fusion and Lightfield Camera</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<meta name="description" content="Final Project: Gradient Domain Fusion and Lightfield Camera" />
+		<meta name="keywords" content="CS, Computer Science, Gradient Domain Fusion, Lightfield Camera" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			body {
+				font-family: 'Arial', sans-serif;
+				font-size: 16px;
+				line-height: 1.6;
+				color: #333;
+				margin: 20px;
+				justify-content: center;
+				align-items: center;
+			}
+
+			h1, h2, h3, h4, h5, h6 {
+				font-family: 'Georgia', serif;
+				color: #222;
+			}
+
+			p {
+				margin-bottom: 15px;
+			}
+
+			a {
+				color: #007BFF;
+				text-decoration: none;
+			}
+
+			a:hover {
+				text-decoration: underline;
+			}
+
+			.caption {
+				font-size: 14px;
+				color: #555;
+			}
+
+			.image-container {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 10px;
+				margin: 10px 0;
+			}
+
+			.image-box {
+				text-align: center;
+			}
+
+			.image-box img {
+				border: 2px solid #000;
+				box-shadow: 0 0 5px rgba(0,0,0,0.3);
+			}
+
+			img {
+				max-width: 80%;
+				height: auto;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.image-container-large {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 20px;
+				margin: 20px 0;
+			}
+
+			.image-container-large .image-box {
+				text-align: center;
+			}
+
+			.image-container-large img {
+				max-width: 100%;
+				height: auto;
+				justify-content: center;
+				align-items: center;
+				box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+			}
+
+			.caption {
+				white-space: pre-line;
+				font-family: Arial, sans-serif;
+				font-size: 14px;
+			}
+
+			.center {
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+				width: 60%;
+			}
+
+			/* Added styles for nested lists */
+			.nested-list {
+				margin-left: 20px;
+			}
+
+			.enlarged-image { 
+				width: 400px; 
+				height: auto; 
+			}
+
+			/* Section spacing */
+			.section {
+				margin-bottom: 40px;
+				padding: 20px;
+				background-color: #fff;
+				border-radius: 5px;
+				box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+			}
+
+			.comparison-container {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 20px;
+				justify-content: center;
+				margin: 20px 0;
+			}
+
+			.comparison-item {
+				flex: 1;
+				min-width: 300px;
+				max-width: 45%;
+				text-align: center;
+			}
+
+			.comparison-item img {
+				width: 100%;
+				height: auto;
+				margin-bottom: 10px;
+			}
+
+			.results-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+				gap: 20px;
+				margin: 20px 0;
+			}
+
+			.result-item {
+				text-align: center;
+			}
+
+			.result-item img {
+				width: 100%;
+				height: auto;
+				margin-bottom: 10px;
+			}
+			body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .equation {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        ul {
+            margin-left: 20px;
+        }
+		</style>
+		</head>
+		<body class="is-preload">
+			<div id="wrapper">
+				<section class="intro">
+					<header>
+						<h1>Final Project: Gradient Domain Fusion and Lightfield Camera</h1>
+						<h3>Table of Contents</h3>
+						
+						<!-- Gradient Domain Fusion Section -->
+						<h4>Gradient Domain Fusion</h4>
+						<ul class="actions">
+							<li><a href="#toy-problem" class="arrow scrolly"><span class="label">Part 1: Toy Problem</span></a></li>
+							
+							<li><a href="#poisson-blending" class="arrow scrolly"><span class="label">Part 2: Poisson Blending</span></a></li>
+							<li><a href="#bells-whistles" class="arrow scrolly"><span class="label">Bells and Whistles: Mixed Blending</span></a></li>
+							<li><a href="#results" class="arrow scrolly"><span class="label">Results</span></a></li>
+							<ul class="nested-list">
+								<li><a href="#penguin" class="arrow scrolly">Penguin with Snow</a></li>
+								<li><a href="#pelican" class="arrow scrolly">Pelican over Bay Bridge</a></li>
+								<li><a href="#godzilla" class="arrow scrolly">Godzilla at the Big Game</a></li>
+								<li><a href="#sail" class="arrow scrolly">Sailboat at the Marina during sunset</a></li>
+							</ul>
+						</ul>
+					
+						<!-- Lightfield Camera Section -->
+						<h4>Lightfield Camera</h4>
+						<ul class="actions">
+							<li><a href="#depth-refocusing" class="arrow scrolly"><span class="label">Part 1: Depth Refocusing</span></a></li>
+							<li><a href="#aperture-adjustment" class="arrow scrolly"><span class="label">Part 2: Aperture Adjustment</span></a></li>
+							<li><a href="#summary" class="arrow scrolly"><span class="label">Summary</span></a></li>
+						</ul>
+					</header>
+				</section>
+	</head>
+	<body class="is-preload">
+		<div id="wrapper">
+			<!-- Table of Contents (same as before) -->
+			
+			<!-- Gradient Domain Fusion -->
+			<section id="gradient-domain-fusion" class="section">
+				<h2>Gradient Domain Fusion</h2>
+
+				<div class="introduction">
+					<p>Project 2 revealed the potential of Gaussian and Laplacian stacks for image blending. While effective, this method demanded perfectly cut-out masks for each source image, making the process cumbersome. Poisson Blending offers a solution to this challenge. The technique preserves source image gradients while maintaining background pixels through a system of equations. Though color intensities are ignored in favor of image features, the results prove remarkably effective.</p>
+					
+					<p>I had the opportunity to experiment with blending my own photographs taken later in the semester, which added an exciting personal dimension to the project.</p>
+				</div>
+				
+				<!-- Part 1: Toy Problem -->
+				<section id="toy-problem" class="section">
+					<h3>Part 1: Toy Problem</h3>
+
+					<p>Our first step explores image reconstruction using x and y gradients. We reconstruct a toy image <strong>S</strong> (dimension <strong>h, w</strong>) by solving <strong>Av = b</strong>, where <strong>v</strong> represents our flattened target image.</p>
+        
+        <p>The process involves three key steps:</p>
+        <ol>
+            <li>Convert the 2D image <strong>S</strong> into a 1D vector <strong>s</strong></li>
+            <li>Build gradient operator matrix <strong>A</strong> (<strong>2*h*w + 1, h*w</strong>):
+                <ul>
+                    <li>First <strong>h*w</strong> rows encode x-gradients: <strong>s(x+1, y) - s(x, y) = v(x+1, y) - v(x, y)</strong></li>
+                    <li>Next <strong>h*w</strong> rows encode y-gradients: <strong>s(x, y+1) - s(x, y) = v(x, y+1) - v(x, y)</strong></li>
+                    <li>Final row sets <strong>s(0, 0) = v(0, 0)</strong> to ensure a unique solution</li>
+                </ul>
+            </li>
+            <li>Calculate gradient vector <strong>b</strong> as <strong>A @ s</strong></li>
+        </ol>
+        
+        <p>Our solution achieves a MSE of 3.12e-25, nearly perfectly reconstructing the original image:</p>
+    
+		
+					<div class="image-box">
+						<img src="media/toy_reconstructed.png" alt="Toy Problem Result">
+						<p class="caption">Reconstructed Result from Toy Problem</p>
+					</div>
+				</section>
+				<!-- Part 2: Poisson Blending -->
+				<section id="poisson-blending" class="section">
+					<h3>Part 2: Poisson Blending</h3>
+					
+					<p>
+						Now that we have addressed the toy problem, we can implement Poisson Blending. Poisson Blending aims to minimize the following equation:
+					</p>
+					
+					<div class="image">
+						<img src="media/poisson_blend_eq.jpg" alt="Toy Problem Result">
+					</div>
+					
+					<p>
+						Here, <b>v</b> represents the resulting image, and <b>s</b> is the flattened source image that we want to blend. <b>t</b> is the flattened target image where blending occurs. The set <b>S</b> comprises pixels within the defined mask (the pixels to be blended into the target image). The term <b>N<sub>i</sub></b> refers to the 4-neighbors of pixel <b>i</b> (pixels directly above, below, left, and right of <b>i</b>).
+					</p>
+					
+					<p>
+						The first summation minimizes the gradients between the source image inside the mask and the result <b>v</b>. The second summation handles cases where a neighboring pixel lies outside the mask. In such cases, the corresponding gradient uses the target image <b>t</b> as the reference.
+					</p>
+					
+					<h2>Setting Up the Minimization Problem</h2>
+					
+					<p>
+						We can frame the above minimization as a system of linear equations <b>Av = b</b>, where:
+					</p>
+					
+					<ul>
+						<li><b>A</b> is a matrix of dimensions (<i>h * w</i>, <i>h * w</i>).</li>
+						<li><b>b</b> is a vector of length <i>h * w</i> (one row for each pixel in <b>s</b>).</li>
+					</ul>
+					
+					<p>For each numbered pixel <b>i</b> in <b>s</b>:</p>
+					
+					<ul>
+						<li>
+							If the current pixel lies outside the mask <b>S</b>, set up the equation:
+							<div class="equation">s(x, y) = t(x, y)</div>
+							in row <b>A<sub>i</sub></b> and <b>b<sub>i</sub></b>.
+						</li>
+						<li>
+							If the current pixel lies inside the mask <b>S</b>, for each neighbor <b>n</b> of <b>s<sub>i</sub></b>:
+							<ul>
+								<li>Add the equation: <div class="equation">s(x, y) - n(x, y)</div> to <b>A<sub>i</sub></b>.</li>
+								<li>Add the equation: <div class="equation">t(x, y) - n'(x, y)</div> for <b>t</b>'s corresponding neighbor to <b>b<sub>i</sub></b>.</li>
+								<li>
+									Note: If the neighbor <b>n</b> lies outside the mask, replace <b>n(x, y)</b> in <b>A</b> with <b>n'(x, y)</b>.
+								</li>
+							</ul>
+						</li>
+					</ul>
+					
+					<p>
+						This system of equations is designed for 2D images. For color images, the system must be solved three times (once for each color channel in <b>s</b>), and the results combined. 
+					</p>
+
+				</section>
+				<!-- Part 2: Poisson Blending -->
+				<section id="bells-whistles" class="section">
+					<h3>Bells and Whistles: Mixed Blending</h3>
+
+					<p> 
+						Before we get to the exciting bit (results!), I wanted to include the bells and whistles component of implementing mixed blending so we could compare earlier results with this technique as well. 
+						I follow the same steps as Poisson blending, but used the gradient with the larger magnitude across source and target as the guide, rather than the source gradient. The equation I had to solve for was:
+					</p>
+
+					<div class="image">
+						<img src="media/mixed_blend_eq.jpg" alt="Toy Problem Result">
+					</div>
+
+					<p>
+						Here <b>d<sub>ij</sub></b> is the value of the gradient from the source or the target image with larger magnitude. Note that larger magnitude is not the same as greater value. 
+					</p>
+				</section>
+				<!-- Part 2: Poisson Blending -->
+				<section id="results" class="section">
+					<h3>Results</h3>
+					Now for the exciting part. I first worked with the samples provided and aimed to add a penguin to this snowy background.
+					<!-- Penguin -->
+					<section id="penguin" class="section">
+						<h4>2.1 Penguin</h4>
+						
+						<div class="image-box-container">
+							<div class="image">
+								<img src="media/penguin.jpg" alt="Original Penguin">
+								<p class="caption">Original Image</p>
+							</div>
+							<div class="image">
+								<img src="media/penguin_mask.jpg" alt="Penguin Mask">
+								<p class="caption">Mask</p>
+							</div>
+						</div>
+						<div class="image-box-container">
+							<div class="result-item">
+								<img src="media/penguin_naive_blend.jpg" alt="Naive Blend">
+								<p class="caption">Naive Blend</p>
+							</div>
+							<div class="result-item">
+								<img src="media/penguin_poisson_blend.jpg" alt="Poisson Blend">
+								<p class="caption">Poisson Blend</p>
+							</div>
+
+							<div class="result-item">
+								<img src="media/penguin_mixed_blend.jpg" alt="Mixed Blend">
+								<p class="caption">Mixed Blend</p>
+							</div>
+						</div>
+					</section>
+
+					<!-- Pelican -->
+					<section id="pelican" class="section">
+						<h4>2.2 Pelican</h4>
+						<div class="comparison-container">
+							<div class="comparison-item">
+								<img src="media/pelican.jpg" alt="Original Pelican">
+								<p class="caption">Original Image</p>
+							</div>
+							<div class="comparison-item">
+								<img src="media/pelican_mask.png" alt="Pelican Mask">
+								<p class="caption">Mask</p>
+							</div>
+						</div>
+						<div class="results-grid">
+							<div class="result-item">
+								<img src="media/pelican_naive_blend.jpg" alt="Naive Blend">
+								<p class="caption">Naive Blend</p>
+							</div>
+							<div class="result-item">
+								<img src="media/pelican_poisson_blend.jpg" alt="Poisson Blend">
+								<p class="caption">Poisson Blend</p>
+							</div>
+							<div class="result-item">
+								<img src="media/pelican_mixed_blend.jpg" alt="Mixed Blend">
+								<p class="caption">Pelican flying over Bay Bridge</p>
+							</div>
+						</div>
+					</section>
+
+					<!-- Godzilla -->
+					<section id="godzilla" class="section">
+						<h4>2.3 Godzilla</h4>
+						<div class="comparison-container">
+							<div class="comparison-item">
+								<img src="media/godzilla.jpg" alt="Original Godzilla">
+								<p class="caption">Original Image</p>
+							</div>
+							<div class="comparison-item">
+								<img src="media/godzilla_mask.png" alt="Godzilla Mask">
+								<p class="caption">Mask</p>
+							</div>
+						</div>
+						<div class="image-box-container">
+							<div class="result-item">
+								<img src="media/godzilla_naive_blend.jpg" alt="Naive Blend">
+								<p class="caption">Naive Blend</p>
+							</div>
+							<div class="result-item">
+								<img src="media/godzilla_poisson_blend.jpg" alt="Poisson Blend">
+								<p class="caption">Poisson Blend</p>
+							</div>
+
+							<div class="result-item">
+								<img src="media/godzilla_mixed_blend.jpg" alt="Mixed Blend">
+								<p class="caption">Godzilla at Big Game</p>
+							</div>
+						</div>
+					</section>
+
+					<!-- Sail -->
+					<section id="sail" class="section">
+						<h4>2.4 Sail</h4>
+						<div class="comparison-container">
+							<div class="comparison-item">
+								<img src="media/sail.jpg" alt="Original Sail">
+								<p class="caption">Original Image</p>
+							</div>
+							<div class="comparison-item">
+								<img src="media/sail_mask.png" alt="Sail Mask">
+								<p class="caption">Mask</p>
+							</div>
+						</div>
+						<div class="comparison-container">
+							<div class="result-item">
+								<img src="media/sail_naive_blend.jpg" alt="Naive Blend">
+								<p class="caption">Naive Blend</p>
+							</div>
+							<div class="result-item">
+								<img src="media/sail_poisson_blend.jpg" alt="Poisson Blend">
+								<p class="caption">Poisson Blend</p>
+							</div>
+
+							<div class="result-item">
+								<img src="media/sail_mixed_blend.jpg" alt="Mixed Blend">
+								<p class="caption">Sailboat added to marina</p>
+							</div>
+						</div>
+					</section>
+				</section>
+			
+			<!-- Lightfield Camera -->
+			<section id="lightfield-camera" class="section">
+				<h2>Lightfield Camera</h2>
+				
+				<!-- Part 1: Depth Refocusing -->
+				<section id="depth-refocusing" class="section">
+					<h3>Part 1: Depth Refocusing</h3>
+					<div class="result-item">
+						<img src="media/chessboard_depth_-3.0_3.0_40.gif" alt="Depth Refocusing Result">
+						<p class="caption">Depth Refocusing Animation</p>
+					</div>
+				</section>
+
+				<!-- Part 2: Aperture Adjustment -->
+				<section id="aperture-adjustment" class="section">
+					<h3>Part 2: Aperture Adjustment</h3>
+					<div class="result-item">
+						<img src="media/chessboard_aperture_R1_10_C0.2.gif" alt="Aperture Adjustment Result">
+						<p class="caption">Aperture Adjustment Animation</p>
+					</div>
+				</section>
+
+				<!-- Summary -->
+				<section id="summary" class="section">
+					<h3>Summary</h3>
+					<!-- Add summary content here -->
+				</section>
+			</section>
+		</div>
+
+		<!-- Scripts -->
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/jquery.scrolly.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+	</body>
+</html>
