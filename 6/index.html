@@ -193,6 +193,7 @@
 								<li><a href="#godzilla" class="arrow scrolly">Godzilla at the Big Game</a></li>
 								<li><a href="#sail" class="arrow scrolly">Sailboat at the Marina during sunset</a></li>
 							</ul>
+							<li><a href="#reflection" class="arrow scrolly"><span class="label">Reflection</span></a></li>
 						</ul>
 					
 						<!-- Lightfield Camera Section -->
@@ -322,18 +323,20 @@
 				<!-- Part 2: Poisson Blending -->
 				<section id="results" class="section">
 					<h3>Results</h3>
-					Now for the exciting part. I first worked with the samples provided and aimed to add a penguin to this snowy background.
-					<!-- Penguin -->
+					<p>Now for the exciting part, results! The pictures of the Bay Bridge, stadium during the Big Game, sailboat, and the Berkeley marina during sunset were all taken by me.</p>
+						<!-- Penguin -->
 					<section id="penguin" class="section">
-						<h4>2.1 Penguin</h4>
-						
-						<div class="image-box-container">
-							<div class="image">
-								<img src="media/penguin.jpg" alt="Original Penguin">
+						<h4>2.1 Penguin in the Snow</h4>
+						<p>
+							I first worked with the samples provided and aimed to add a penguin to this snowy background. Compared to the Naive Blend, Poisson Blending performed much better. The penguin still feels out of place, but that has more to do with the fact that a tiny penguin seems out of place regardless of how well it is blended in. The mixed blending gave very similar outcomes and I could not discern sharp differences between the two.
+						</p>
+						<div class="comparison-container">
+							<div class="comparison-item">
+								<img src="media/penguin.jpg" alt="Original Pelican">
 								<p class="caption">Original Image</p>
 							</div>
-							<div class="image">
-								<img src="media/penguin_mask.jpg" alt="Penguin Mask">
+							<div class="comparison-item">
+								<img src="media/penguin_mask.jpg" alt="Pelican Mask">
 								<p class="caption">Mask</p>
 							</div>
 						</div>
@@ -356,7 +359,10 @@
 
 					<!-- Pelican -->
 					<section id="pelican" class="section">
-						<h4>2.2 Pelican</h4>
+						<h4>2.2 Pelican over Bay Bridge at Sunset</h4>
+						<p>
+							This really demonstrated the value of Poisson blending. I intentionally left in some of the background in the pelican mask, viewable in the naive blend. You can see that the tone of the image is starkly different: the pelican picture was taken closer to noon, whereas the bridge picture is at sunset. Both poisson and mixed blending do a great job of seamlessly blending the pelican into the background. The orange tint of the pelican is slightly overdone and doesn't capture the geometry of how the light rays would hit the pelican, but it's still better than the Pyramid blending technique which would not have affected the tone of the image to the same degree. I think Mixed Blending didn't have too different of an effect here because the pelican's gradient's dominate and the water in the background is consistent across all edges of the pelican. I was happy with this!
+						</p>
 						<div class="comparison-container">
 							<div class="comparison-item">
 								<img src="media/pelican.jpg" alt="Original Pelican">
@@ -367,7 +373,7 @@
 								<p class="caption">Mask</p>
 							</div>
 						</div>
-						<div class="results-grid">
+						<div class="image-box-container">
 							<div class="result-item">
 								<img src="media/pelican_naive_blend.jpg" alt="Naive Blend">
 								<p class="caption">Naive Blend</p>
@@ -378,14 +384,17 @@
 							</div>
 							<div class="result-item">
 								<img src="media/pelican_mixed_blend.jpg" alt="Mixed Blend">
-								<p class="caption">Pelican flying over Bay Bridge</p>
+								<p class="caption">Mixed Blend</p>
 							</div>
 						</div>
 					</section>
 
 					<!-- Godzilla -->
 					<section id="godzilla" class="section">
-						<h4>2.3 Godzilla</h4>
+						<h4>2.3 Godzilla at Memorial Stadium</h4>
+						<p>
+							In the spirit of challenging myself, I now picked an image where the source is being overlaid on regions with varying colors. Adding Godzilla on this picture from the Big Game 2024 seemed promising as an idea. I'd argue that the naive blend actually does a decent job in that the time of day and lighting seems to match up better, in contrast to both Poisson and mixed blending wherein the gradients of the stadium darken Godzilla. Here, we also note the difference between Poisson and mixed blending. Poisson blending always uses the source gradients and so the source comes across more strongly. In the mixed blending case, Godzilla is slightly transparent in some areas and the blend looks a bit more weird. 
+						</p>
 						<div class="comparison-container">
 							<div class="comparison-item">
 								<img src="media/godzilla.jpg" alt="Original Godzilla">
@@ -408,14 +417,15 @@
 
 							<div class="result-item">
 								<img src="media/godzilla_mixed_blend.jpg" alt="Mixed Blend">
-								<p class="caption">Godzilla at Big Game</p>
+								<p class="caption">Mixed Blend</p>
 							</div>
 						</div>
 					</section>
 
 					<!-- Sail -->
 					<section id="sail" class="section">
-						<h4>2.4 Sail</h4>
+						<h4>2.4 Sailboat at the Berkeley Marina during Sunset</h4>
+						<p> Finally, I decided to try and blend in a sailboat (featuring my sailing instructor Ezra right before he demonstrated a capsize) with a picture I took of the Berkeley Marina at Sunset. Similar to the Bay Bridge image, the fact that the lighting differs in both pictures (2pm vs 5pm PDT) means that traditional methods would not have worked here. The end result in Poisson blending is remarkable and for a moment, I believe the image isn't edited (just for a moment). The mixed blending runs into the same problem as earlier, portions become transparent since the background that overlaps with the mask varies and has portions with gradients that dominate.</p>
 						<div class="comparison-container">
 							<div class="comparison-item">
 								<img src="media/sail.jpg" alt="Original Sail">
@@ -442,34 +452,56 @@
 							</div>
 						</div>
 					</section>
-				</section>
+
+					<section id="reflection" class="section">
+						<h3>Reflection</h3>
+						<p>
+						I thought it was super cool to see a very different perspective on blending. I found it promising in situations where the pictures had very different lighting, and was quite pleasantly surprised with some of the results. I think this ranks third in terms of coolest concepts I've seen in this class, behind the auto-stitching and diffusion model topics.
+						</p>
+					</section>
 			
 			<!-- Lightfield Camera -->
 			<section id="lightfield-camera" class="section">
 				<h2>Lightfield Camera</h2>
-				
+				<p>A lightfield camera, also referred to as a plenoptic camera, captures images by gathering light rays from all directions. This enables the creation of 3D photos that appear as "living pictures." This project investigates how basic operations, such as shifting and averaging, can be applied to lightfield data to achieve various effects on the resulting image. The lightfield data used in this project was sourced from <a href="http://lightfield.stanford.edu/lfs.html" target="_blank">Stanford's Light Field Archive</a>.</p>
+
 				<!-- Part 1: Depth Refocusing -->
 				<section id="depth-refocusing" class="section">
 					<h3>Part 1: Depth Refocusing</h3>
+
+					<p>To generate lightfield data, the camera is moved to capture photos from various angles. When the camera's movement maintains the lens' optical axis, nearby objects exhibit significant position changes between images, while distant objects show minimal variation. As a result, averaging all lightfield images without adjustments produces a photo where nearby objects appear blurry, and far objects remain sharp. This effect can be leveraged to create images focusing on objects at different depths, a process known as depth refocusing.</p>
+
+					<p>Each lightfield dataset consists of 289 sub-aperture images, <em>I<sub>x, y</sub></em>, arranged in a 17x17 grid (0-indexed) with corresponding (<em>u, v</em>) values indicating the camera's position. The center image is defined as <em>I<sub>8, 8</sub></em>, with a corresponding (<em>u<sub>c</sub>, v<sub>c</sub></em>) location. To refocus an image, each sub-aperture image <em>I<sub>x, y</sub></em> in the lightfield is shifted by <em>C * (u<sub>I</sub> - u<sub>c</sub>, v<sub>I</sub> - v<sub>c</sub>)</em> (i.e., shifted toward the center image). Afterward, all the images are averaged together, intuitively "refocusing" the camera on a central point. Adjusting the value of <em>C</em> changes the focal plane, altering the focus location.</p>
+
+
 					<div class="result-item">
-						<img src="media/chessboard_depth_-3.0_3.0_40.gif" alt="Depth Refocusing Result">
-						<p class="caption">Depth Refocusing Animation</p>
+						<img src="media/chessboard_depth_-2.0_2.0_40.gif" alt="Depth Refocusing Result">
+						<p class="caption">Depth Refocusing on Chessboard (C from -2 to 2)</p>
 					</div>
 				</section>
 
 				<!-- Part 2: Aperture Adjustment -->
 				<section id="aperture-adjustment" class="section">
 					<h3>Part 2: Aperture Adjustment</h3>
+					<p>In addition, we can simulate adjusting the aperture by averaging only a subset of images within the lightfield dataset. The greater the number of images averaged, the larger the aperture becomes, and a larger aperture results in a more "focused-in" effect at a specific point. To select which images to average, we use a radius parameter <em>r</em>, which defines the maximum distance a sub-aperture can be from the center image based on their (<em>u, v</em>) positions. Below are examples illustrating the transition from using a single image to all 289 images in the dataset.</p>
+
 					<div class="result-item">
 						<img src="media/chessboard_aperture_R1_10_C0.2.gif" alt="Aperture Adjustment Result">
-						<p class="caption">Aperture Adjustment Animation</p>
+						<p class="caption">Aperture Adjustment on Chessboard (C=0.2, R from 1 to 10)</p>
 					</div>
 				</section>
 
 				<!-- Summary -->
 				<section id="summary" class="section">
-					<h3>Summary</h3>
-					<!-- Add summary content here -->
+					<h3>Reflection</h3>
+					<p>
+						This project was interesting in that it sort of reminded me of the very first project on image alignment. I had wondered if it was possible to leverage the shifts to emphasize certain components (then, more in the context of color), and this provided a method to do so in terms of depth. The animations look super cool, and while I didn't implement the bells and whistles, the idea of being able to use my phone to get a lightfield from a video seemed really interesting. 
+					</p>
+
+					<p>
+						All in all, I really liked the sense of achievement that came with each project in CS 180. I had a (mostly) fun time, and I learnt a lot of random trivia along the way. I appreciate Prof. Efros' segments on art history or human vision as I felt that history helped give a more holistic view of the field, and better motivated why models work.
+					</p>
+		
 				</section>
 			</section>
 		</div>
